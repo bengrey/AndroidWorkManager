@@ -12,6 +12,7 @@ import com.example.background.KEY_IMAGE_URI
 import com.example.background.R
 
 private const val TAG = "BlurWorker"
+
 class BlurWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, params) {
 
     override fun doWork(): Result {
@@ -21,21 +22,21 @@ class BlurWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, params) {
 
         makeStatusNotification("Blurring image", appContext)
 
-        return try {
-            // REMOVE THIS
-            //    val picture = BitmapFactory.decodeResource(
-            //            appContext.resources,
-            //            R.drawable.android_cupcake)
+        // ADD THIS TO SLOW DOWN THE WORKER
+        sleep()
+        // ^^^^
 
+        return try {
             if (TextUtils.isEmpty(resourceUri)) {
-                Log.e(TAG, "Invalid input uri")
+                Timber.e("Invalid input uri")
                 throw IllegalArgumentException("Invalid input uri")
             }
 
             val resolver = appContext.contentResolver
 
             val picture = BitmapFactory.decodeStream(
-                resolver.openInputStream(Uri.parse(resourceUri)))
+                resolver.openInputStream(Uri.parse(resourceUri))
+            )
 
             val output = blurBitmap(picture, appContext)
 
@@ -46,7 +47,6 @@ class BlurWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, params) {
 
             Result.success(outputData)
         } catch (throwable: Throwable) {
-            Log.e(TAG, "Error applying blur")
             throwable.printStackTrace()
             Result.failure()
         }
