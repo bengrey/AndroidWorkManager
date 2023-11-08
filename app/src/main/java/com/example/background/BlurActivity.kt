@@ -44,6 +44,8 @@ class BlurActivity : AppCompatActivity() {
                 }
             }
         }
+
+        binding.cancelButton.setOnClickListener { viewModel.cancelWork() }
     }
 
     /**

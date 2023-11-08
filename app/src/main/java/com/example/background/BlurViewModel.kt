@@ -136,4 +136,8 @@ class BlurViewModel(application: Application) : ViewModel() {
             }
         }
     }
+
+    internal fun cancelWork() {
+        workManager.cancelUniqueWork(IMAGE_MANIPULATION_WORK_NAME)
+    }
 }
